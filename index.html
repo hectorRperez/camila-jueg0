@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="theme-color" content="#0d0b08">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>Ecos del Bosque</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div id="app">
+  <div id="stage">
+
+    <!-- ================= TÍTULO ================= -->
+    <section class="screen active" id="screen-title">
+      <img class="title-bg" src="assets/bg/title.jpg" alt="">
+      <div class="title-shade"></div>
+
+      <img class="logo" src="assets/ui/logo.png" alt="Ecos del Bosque">
+
+      <button class="big-btn" id="btnStart">Iniciar</button>
+      <button class="link-btn" id="btnNewGame" hidden>Empezar de nuevo</button>
+
+      <div class="intro-box">
+        <p>Conoce a <b id="introName">THOR</b> y ayúdalo a cumplir sus tareas,
+        para que crezca y evolucione a su mejor versión.</p>
+      </div>
+
+      <!-- pedir nombre la primera vez -->
+      <div class="veil" id="nameModal" hidden>
+        <div class="panel name-box">
+          <p class="name-title">¿Cómo se llama tu amigo?</p>
+          <input id="nameInput" maxlength="12" placeholder="Escribe su nombre" autocomplete="off">
+          <button class="big-btn" id="btnNameOk">Jugar</button>
+        </div>
+      </div>
+
+      <!-- confirmar partida nueva -->
+      <div class="veil" id="confirmNew" hidden>
+        <div class="panel confirm-box">
+          <p>Ya tienes una partida guardada.<br>¿Seguro que quieres empezar de cero?</p>
+          <div class="confirm-row">
+            <button class="act" id="yesNew">Sí, empezar</button>
+            <button class="act" id="noNew">Mejor no</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= JUEGO ================= -->
+    <section class="screen" id="screen-game">
+      <img class="bg" id="bg" src="assets/bg/home.jpg" alt="">
+
+      <!-- HUD de stats -->
+      <div id="hud">
+        <div class="stat" data-stat="vida">
+          <div class="stat-head">Vida</div>
+          <div class="track">
+            <div class="fill"></div>
+            <img class="knob" src="assets/ui/knob-vida.png" alt="">
+          </div>
+        </div>
+        <div class="stat" data-stat="energia">
+          <div class="stat-head">Energía</div>
+          <div class="track">
+            <div class="fill"></div>
+            <img class="knob" src="assets/ui/knob-energia.png" alt="">
+          </div>
+        </div>
+        <div class="stat" data-stat="diversion">
+          <div class="stat-head">Diversión</div>
+          <div class="track">
+            <div class="fill"></div>
+            <img class="knob" src="assets/ui/knob-diversion.png" alt="">
+          </div>
+        </div>
+      </div>
+
+      <!-- tendedero del bosque: ropa para comprar/poner -->
+      <div id="forestDecor" hidden>
+        <button class="float-item" data-outfit="winter"><img src="assets/ui/cl-hatscarf.png" alt="Gorro y bufanda"></button>
+        <button class="float-item" data-outfit="sweater"><img src="assets/ui/cl-sweater.png" alt="Suéter"></button>
+        <button class="float-item" data-outfit="vest"><img src="assets/ui/cl-vest.png" alt="Chaleco"></button>
+      </div>
+
+      <!-- monedas -->
+      <div id="coins"><img src="assets/ui/star.png" alt=""><span id="coinCount">0</span></div>
+
+      <!-- mascota -->
+      <div id="petWrap">
+        <div id="petBox">
+          <img id="pet" src="assets/pet/idle.png" alt="">
+          <div id="dirtLayer"></div>
+          <div id="petFx"></div>
+        </div>
+      </div>
+
+      <!-- burbuja de diálogo -->
+      <div id="bubble" class="bubble">
+        <span id="bubbleText"></span>
+        <div class="bubble-arrow"></div>
+      </div>
+
+      <!-- acción contextual de la escena -->
+      <div id="actionBar"></div>
+
+      <!-- navegación -->
+      <nav id="nav">
+        <button class="nav-btn" data-scene="casa"><img src="assets/ui/n-house.png" alt=""><span>Casa</span></button>
+        <button class="nav-btn" data-scene="bano"><img src="assets/ui/n-bath.png" alt=""><span>Baño</span></button>
+        <button class="nav-btn" data-scene="cocina"><img src="assets/ui/n-food.png" alt=""><span>Cocina</span></button>
+        <button class="nav-btn" data-scene="dormir"><img src="assets/ui/n-sleep.png" alt=""><span>Dormir</span></button>
+        <button class="nav-btn" data-scene="juego"><img src="assets/ui/n-play.png" alt=""><span>Juego</span></button>
+        <button class="nav-btn" data-scene="tarea"><img src="assets/ui/n-task.png" alt=""><span>Tareas</span></button>
+      </nav>
+
+      <!-- capas emergentes -->
+      <div id="overlay" class="overlay" hidden>
+        <div class="panel overlay-panel" id="overlayPanel"></div>
+      </div>
+
+      <div id="toast" class="toast" hidden></div>
+    </section>
+
+  </div>
+</div>
+
+<div id="rotate">
+  <div>
+    <div class="rot-icon">⟳</div>
+    Gira tu teléfono<br>para jugar
+  </div>
+</div>
+
+<script src="js/state.js"></script>
+<script src="js/ui.js"></script>
+<script src="js/game.js"></script>
+</body>
+</html>
