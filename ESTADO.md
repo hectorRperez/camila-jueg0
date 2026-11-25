@@ -12,7 +12,8 @@ La primera vez pide el nombre; si ya hay partida, entra directo.
 - **Baño por minijuego**: el ciervo se ensucia con el tiempo y hay que tocar las ramas y
   la espuma para limpiarlo (6 manchas como máximo, una por punto de suciedad).
 - Comer (pide una comida concreta), dormir (recupera energía en vivo), explorar.
-- Minijuego de estrellas estilo Simón con recompensa de monedas.
+- **Minijuego de las estrellas** sobre la escena (11 estrellas, sigue el brillo), según
+  los frames 12-23 del diseñador: HUD oculto mientras se juega y +5 monedas al completar.
 - **Armario/tienda** en el bosque (tendedero flotante): 3 prendas de 10/15/20 monedas,
   se compran y se ponen, y el ciervo cambia de sprite.
 - **Misión "El juguete perdido"**: explorando aparece la corona; el ciervo pasa a su

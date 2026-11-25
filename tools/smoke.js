@@ -73,18 +73,18 @@
   document.querySelector('#overlay').dispatchEvent(new MouseEvent('click', { bubbles: true }));
   await w(400);
 
-  // --- juego
+  // --- juego de las estrellas
   tap(navs.find(b => b.dataset.scene === 'juego'));
-  await w(800);
-  const jugar = [...document.querySelectorAll('#actionBar .act')].find(b => /jugar/i.test(b.textContent));
-  check('juego · acción jugar', jugar);
-  if (tap(jugar)) await w(600);
-  check('juego · estrellas', document.querySelectorAll('.star-pad'));
-  await w(400);
-  const salirSimon = document.getElementById('simonQuit');
-  check('juego · salir', salirSimon);
-  if (salirSimon) tap(salirSimon);
-  await w(400);
+  await w(900);
+  const miniStart = document.getElementById('miniStart');
+  check('juego · botón iniciar', miniStart);
+  if (tap(miniStart)) await w(800);
+  const stars = [...document.querySelectorAll('.star')];
+  check('juego · estrellas', stars);
+  const lit = document.querySelector('.star.lit');
+  check('juego · estrella que brilla', lit);
+  if (lit) tap(lit);
+  await w(500);
 
   // --- dormir
   tap(navs.find(b => b.dataset.scene === 'dormir'));

@@ -51,9 +51,23 @@ la marca de agua "PIXEL FAIRY" con `tools/fill.swift`.
 | bano      | `bg/bath.jpg`  | Limpiar las manchas        | minijuego de suciedad (ver abajo); si está limpio, "Bañarme" da un premio pequeño |
 | cocina    | `bg/kitchen.jpg`| Comer                     | pide una comida; acertar +20 vida, +1 moneda |
 | dormir    | `bg/bedroom.jpg`| Dormir                    | sube energía en tiempo real, tarea Dormir|
-| juego     | `bg/forest.jpg`| Jugar                      | minijuego de estrellas (Simón), +5 monedas |
+| juego     | `bg/forest.jpg`| Iniciar (minijuego)        | recoger las 11 estrellas, +5 monedas    |
 | tarea     | `bg/forest.jpg`| Ver tareas                 | tablero + recompensa                    |
 | exterior  | `bg/forest.jpg`| Explorar / Armario / Volver| monedas al azar, tarea Explorar, misión de la corona |
+
+## Minijuego de las estrellas (Frame 12-23)
+
+Se juega **sobre la escena**, sin ventanas emergentes, como en el diseño.
+
+1. Entras a JUEGO: el HUD se ve, el ciervo aparece más grande y flota un botón **INICIAR**.
+2. Al pulsarlo **se ocultan los stats y las monedas** y aparecen **11 estrellas azules**
+   repartidas por el bosque (`STAR_SPOTS`, posiciones medidas de los frames).
+3. Solo **una brilla a la vez** (halo pulsante). Se toca esa y desaparece; entonces brilla
+   la siguiente. Tocar otra no resta nada: tiembla y avisa.
+4. Al recoger las 11: **+5 monedas, +25 diversión**, tarea "Jugar" y el mensaje
+   "¡Lo lograste!". Vuelven el HUD y el botón INICIAR.
+
+El sprite de la estrella es `assets/ui/snowflake.png` (el `9.png` del diseñador).
 
 ## Módulo del baño
 
@@ -99,7 +113,7 @@ Basado en `TAMAGOCHI/PANTALLAS-02 1-1.svg`.
 - [x] **Fase 0 — Arte**: inventario, recorte del HUD, optimización 59 MB → 5.9 MB.
 - [x] **Fase 1 — Esqueleto**: título, escenas, HUD, navegación, diálogos, guardado.
 - [x] **Fase 2 — El ciervo**: stats con desgaste, cuidado (baño, comida, sueño), estados de ánimo.
-- [x] **Fase 3 — Minijuego de estrellas** + monedas.
+- [x] **Fase 3 — Minijuego de las estrellas** (versión del diseñador, ver abajo) + monedas.
 - [x] **Fase 4a — Tareas diarias** y recompensa.
 - [x] **Fase 4b — Armario/ropa**: 3 prendas (`vest`, `sweater`, `winter`) + corona secreta.
       Se compran y se ponen desde el mismo panel; el tendedero flota en el bosque.

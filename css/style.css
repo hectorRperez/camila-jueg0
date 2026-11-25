@@ -503,21 +503,72 @@ button{font-family:inherit;cursor:pointer;border:0;background:none;color:inherit
 .task.done .box img{opacity:1;transform:scale(1)}
 .task.done span{text-decoration:line-through;opacity:.55}
 
-/* minijuego simon */
-.stars-row{display:flex;justify-content:center;gap:26px;padding:10px 0 4px}
-.star-pad{
-  width:126px;height:126px;padding:0;
-  filter:drop-shadow(0 6px 0 rgba(0,0,0,.35));
-  transition:transform .1s;
+/* ---------- minijuego de las estrellas ---------- */
+#starField{position:absolute;inset:0;z-index:5;pointer-events:none}
+
+.star{
+  position:absolute;
+  transform:translate(-50%,-50%);
+  width:96px;height:96px;
+  display:flex;align-items:center;justify-content:center;
+  padding:0;border:0;background:none;
+  pointer-events:auto;
+  animation:starFloat 4s ease-in-out infinite;
 }
-.star-pad img{width:100%;height:100%;image-rendering:pixelated;transition:filter .12s,transform .12s}
-.star-pad.lit img{filter:brightness(1.9) drop-shadow(0 0 22px #ffd75e);transform:scale(1.12)}
-.star-pad.hint img{filter:brightness(1.45) saturate(1.4) drop-shadow(0 0 14px #ffcf4a)}
-.star-pad:active{transform:translateY(4px)}
-.simon-status{
-  text-align:center;font-family:'Silkscreen';font-size:20px;
-  color:#7a5220;text-transform:uppercase;letter-spacing:1px;min-height:26px;
+.star::before{
+  content:"";
+  position:absolute;
+  width:84px;height:84px;border-radius:50%;
+  background:radial-gradient(circle,rgba(160,220,255,.55),rgba(160,220,255,0) 68%);
+  opacity:0;transform:scale(.6);
+  transition:opacity .2s;
 }
+.star.lit::before{opacity:1;animation:starHalo 1.15s ease-in-out infinite}
+@keyframes starHalo{
+  0%,100%{transform:scale(.82);opacity:.5}
+  50%{transform:scale(1.18);opacity:1}
+}
+.star img{
+  width:var(--s,44px);height:auto;
+  image-rendering:pixelated;
+  opacity:.8;
+  transition:opacity .22s, transform .22s, filter .22s;
+  filter:drop-shadow(0 0 8px rgba(120,190,255,.55));
+  animation:starTwinkle 2.6s ease-in-out infinite;
+}
+.star.lit img{
+  opacity:1;
+  transform:scale(1.35);
+  filter:brightness(1.7) drop-shadow(0 0 20px rgba(150,215,255,1));
+}
+.star.wrong img{animation:shake .34s ease}
+.star.taken img{
+  animation:starPoof .28s ease-out forwards;
+}
+@keyframes starFloat{
+  0%,100%{translate:0 -6px}
+  50%{translate:0 6px}
+}
+@keyframes starTwinkle{
+  0%,100%{opacity:.72}
+  50%{opacity:.95}
+}
+@keyframes starPoof{
+  0%{opacity:1;transform:scale(1.35)}
+  100%{opacity:0;transform:scale(2.2) rotate(35deg)}
+}
+
+#miniStart{
+  position:absolute;
+  left:50%;top:452px;
+  transform:translateX(-50%);
+  z-index:8;
+  font-size:23px;
+  padding:15px 40px 10px;
+}
+#miniStart:active{transform:translateX(-50%) translateY(3px)}
+
+.hidden-ui{opacity:0 !important;pointer-events:none !important}
 
 /* toast */
 .toast{

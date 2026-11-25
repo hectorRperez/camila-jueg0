@@ -32,8 +32,9 @@ const SCENES = {
   juego: {
     bg: 'assets/bg/forest.jpg',
     nav: 'play',
-    bubble: 'Pulsa Jugar y repite el orden de las estrellas para ganar una recompensa.',
-    actions: [{ label: 'Jugar', run: openSimon }]
+    pet: { bottom: 396, height: 500 },
+    bubble: 'Deberás recolectar las estrellas en el orden correcto para obtener una recompensa.',
+    actions: []
   },
   tarea: {
     bg: 'assets/bg/forest.jpg',
@@ -153,6 +154,11 @@ function boot() {
     btn.addEventListener('click', () => enterScene(btn.dataset.scene));
   });
 
+  $('#miniStart').addEventListener('click', () => {
+    UI.beep(700, 0.07, 'square', 0.05);
+    startStarGame();
+  });
+
   $$('#forestDecor .float-item').forEach(btn => {
     btn.addEventListener('click', () => { UI.beep(600, 0.07, 'square', 0.05); openWardrobe(); });
   });
@@ -239,6 +245,7 @@ function enterScene(id) {
     updateMood();
   }
 
+  resetStarGame();
   UI.setBg(sc.bg);
   UI.el.bubble.classList.remove('show');
   const dirtLayer = $('#dirtLayer');
@@ -267,6 +274,9 @@ function enterScene(id) {
 
   // el baño tiene su propia mecánica: limpiar las manchas una a una
   if (id === 'bano' && S.dirt > 0) startBathGame();
+
+  const startBtn = $('#miniStart');
+  if (startBtn) startBtn.hidden = id !== 'juego';
 
   if (id === 'exterior') {
     if (completeTask('explorar')) UI.toast('Tarea: Explorar ✓');
@@ -605,119 +615,131 @@ function findToy() {
   });
 }
 
-/* ---------- minijuego de estrellas ---------- */
-const SIMON_TONES = [523, 659, 880];
+/* ---------- minijuego: las estrellas del bosque ----------
+   Basado en Frame 12-23: 11 estrellas repartidas por la escena.
+   Solo brilla una cada vez; al tocarla desaparece y brilla la siguiente.
+   Posiciones en % del escenario (704 x 1524), medidas de los frames. */
+const STAR_SPOTS = [
+  { x: 14, y: 8,  s: 44 },
+  { x: 72, y: 13, s: 52 },
+  { x: 93, y: 23, s: 44 },
+  { x: 39, y: 20, s: 40 },
+  { x: 71, y: 31, s: 46 },
+  { x: 13, y: 37, s: 40 },
+  { x: 50, y: 43, s: 50 },
+  { x: 91, y: 53, s: 42 },
+  { x: 9,  y: 65, s: 46 },
+  { x: 62, y: 64, s: 38 },
+  { x: 88, y: 76, s: 44 }
+];
 
-function openSimon() {
-  let seq = [], step = 0, showing = false, locked = true, alive = true, timer = null;
+const starGame = { active: false, nodes: [], index: 0 };
 
-  UI.openOverlay(`
-    <div class="op-title">El juego de las estrellas</div>
-    <p class="op-text" id="simonMsg">Mira con atención el orden...</p>
-    <div class="stars-row">
-      <button class="star-pad" data-i="0"><img src="assets/ui/star.png" alt=""></button>
-      <button class="star-pad" data-i="1"><img src="assets/ui/star.png" alt=""></button>
-      <button class="star-pad" data-i="2"><img src="assets/ui/star.png" alt=""></button>
-    </div>
-    <div class="simon-status" id="simonStatus">Prepárate</div>
-    <button class="act op-close" id="simonQuit">Salir</button>
-  `, panel => {
-    const pads = $$('.star-pad', panel);
-    const status = $('#simonStatus', panel);
-    const msg = $('#simonMsg', panel);
-
-    $('#simonQuit', panel).addEventListener('click', () => {
-      alive = false;
-      clearTimeout(timer);
-      UI.closeOverlay();
-      setTimeout(() => UI.bubble('¡Volvamos cuando quieras!'), 250);
-    });
-
-    pads.forEach(p => p.addEventListener('click', () => {
-      if (!alive || locked || showing) return;
-      const i = +p.dataset.i;
-      flashPad(pads[i]);
-      UI.beep(SIMON_TONES[i], 0.12, 'triangle', 0.06);
-      if (i === seq[step]) {
-        step++;
-        status.textContent = step + ' / ' + seq.length;
-        if (step >= seq.length) win();
-      } else {
-        fail();
-      }
-    }));
-
-    function flashPad(p) {
-      p.classList.add('lit');
-      setTimeout(() => p.classList.remove('lit'), 260);
-    }
-
-    function play() {
-      showing = true;
-      locked = true;
-      status.textContent = 'Observa...';
-      seq.forEach((i, k) => {
-        setTimeout(() => {
-          if (!alive) return;
-          flashPad(pads[i]);
-          UI.beep(SIMON_TONES[i], 0.16, 'triangle', 0.06);
-        }, 480 + k * 560);
-      });
-      timer = setTimeout(() => {
-        if (!alive) return;
-        showing = false;
-        locked = false;
-        step = 0;
-        status.textContent = '0 / ' + seq.length;
-        msg.textContent = 'Ahora repite el orden tocando las estrellas.';
-      }, 480 + seq.length * 560 + 200);
-    }
-
-    function newRound() {
-      if (!alive) return;
-      seq = Array.from({ length: 4 }, () => Math.floor(Math.random() * 3));
-      step = 0;
-      msg.textContent = 'Mira con atención el orden...';
-      play();
-    }
-
-    function win() {
-      locked = true;
-      status.textContent = '¡Correcto!';
-      UI.chime();
-      addStat('diversion', 25);
-      addStat('vida', 4);
-      S.wins = (S.wins || 0) + 1;
-      if (completeTask('jugar')) UI.toast('Tarea: Jugar ✓');
-      UI.sparkles(12, 'assets/ui/star.png');
-      UI.renderStats();
-      addCoins(5);
-      msg.textContent = '¡Lo lograste! Ganaste 5 monedas.';
-      UI.bubble('¡Increíble! Ese juego me puso muy contento.');
-      save();
-      timer = setTimeout(() => {
-        if (!alive) return;
-        locked = false;
-        step = 0;
-        newRound();
-      }, 2600);
-    }
-
-    function fail() {
-      locked = true;
-      status.textContent = 'Casi...';
-      UI.sadTone();
-      msg.textContent = 'Te equivocaste, pero puedes intentarlo otra vez.';
-      timer = setTimeout(() => {
-        if (!alive) return;
-        locked = false;
-        step = 0;
-        newRound();
-      }, 1500);
-    }
-
-    newRound();
+function hideHud(hide) {
+  ['#hud', '#coins'].forEach(sel => {
+    const el = $(sel);
+    if (el) el.classList.toggle('hidden-ui', hide);
   });
+}
+
+function startStarGame() {
+  if (starGame.active) return;
+  starGame.active = true;
+  starGame.index = 0;
+  starGame.nodes = [];
+
+  hideHud(true);
+  const startBtn = $('#miniStart');
+  if (startBtn) startBtn.hidden = true;
+  setActions([]);
+
+  const field = $('#starField');
+  field.innerHTML = '';
+
+  const order = STAR_SPOTS.slice().sort(() => Math.random() - 0.5);
+  order.forEach(spot => {
+    const b = document.createElement('button');
+    b.className = 'star';
+    b.style.left = spot.x + '%';
+    b.style.top = spot.y + '%';
+    b.style.setProperty('--s', spot.s + 'px');
+    b.style.animationDelay = (Math.random() * 2).toFixed(2) + 's';
+    b.innerHTML = '<img src="assets/ui/snowflake.png" alt="estrella">';
+    b.addEventListener('click', () => tapStar(b));
+    field.appendChild(b);
+    starGame.nodes.push(b);
+  });
+
+  UI.bubble('¡Sigue el brillo! Toca solo la estrella que se ilumina.', { speed: 18 });
+  UI.beep(660, 0.09, 'triangle', 0.05);
+  lightStar();
+}
+
+function lightStar() {
+  starGame.nodes.forEach(n => n.classList.remove('lit'));
+  const n = starGame.nodes[starGame.index];
+  if (n) n.classList.add('lit');
+}
+
+function tapStar(node) {
+  if (!starGame.active) return;
+  const i = starGame.nodes.indexOf(node);
+  if (i < 0) return;
+
+  // estrella equivocada: tiembla y no pasa nada
+  if (i !== starGame.index) {
+    node.classList.add('wrong');
+    setTimeout(() => node.classList.remove('wrong'), 340);
+    UI.beep(220, 0.07, 'sine', 0.04);
+    UI.bubbleStatic('¡Esa no! Toca la que brilla.');
+    return;
+  }
+
+  node.classList.remove('lit');
+  node.classList.add('taken');
+  setTimeout(() => node.remove(), 280);
+
+  UI.beep(680 + starGame.index * 45, 0.08, 'triangle', 0.05);
+  addStat('diversion', 2);
+  UI.renderStats();
+
+  starGame.index += 1;
+  const left = starGame.nodes.length - starGame.index;
+
+  if (left === 0) {
+    finishStarGame();
+  } else {
+    lightStar();
+    if (left <= 3) UI.bubbleStatic(left === 1 ? '¡Solo queda una!' : '¡Quedan ' + left + '!');
+  }
+  saveSoon();
+}
+
+function finishStarGame() {
+  starGame.active = false;
+  hideHud(false);
+  S.wins = (S.wins || 0) + 1;
+  addStat('diversion', 25);
+  addStat('vida', 4);
+  if (completeTask('jugar')) UI.toast('Tarea: Jugar ✓');
+  UI.chime();
+  UI.sparkles(18, 'assets/ui/star.png');
+  UI.renderStats();
+  addCoins(5);
+  UI.bubble('¡Lo lograste! Recogiste todas las estrellas.');
+  const startBtn = $('#miniStart');
+  if (startBtn) startBtn.hidden = false;
+  save();
+}
+
+function resetStarGame() {
+  starGame.active = false;
+  starGame.nodes = [];
+  const field = $('#starField');
+  if (field) field.innerHTML = '';
+  hideHud(false);
+  const startBtn = $('#miniStart');
+  if (startBtn) startBtn.hidden = true;
 }
 
 /* ---------- tareas ---------- */
