@@ -33,6 +33,14 @@ Sin errores de consola.
 juego**. Se añadió `.overlay[hidden]{display:none}`. Desde entonces `tools/smoke.js`
 comprueba con `elementFromPoint` que cada botón es alcanzable (0 bloqueados).
 
+## Versión escritorio
+
+- Detección automática por tamaño/aspecto de ventana (`UI.pickMode`), sin botón ni URL.
+- Escenario 1600 × 900 con `assets/bg/desk/*.jpg`; la mecánica y el estado son idénticos.
+- Todo el HUD y los paneles escalan ~25 % más; las acciones pasan a menú vertical a la derecha.
+- Probado en 1440 × 900 (escritorio) y 390 × 844 (móvil): 0 controles bloqueados en ambos.
+- Cambio de modo en caliente verificado en los dos sentidos (fondo y escenario se actualizan).
+
 ## Cómo probar rápido
 
 ```bash
@@ -40,6 +48,7 @@ node tools/cdp.mjs "file://$PWD/index.html#test" 390 844 /tmp/shot.png
 ```
 
 `#test` entra directo al juego. Sin el hash, se prueba el título.
+Para ver el modo escritorio, abre la ventana ancha (> 900 px y apaisada).
 
 Prueba de toques (imprescindible tras tocar CSS de capas):
 

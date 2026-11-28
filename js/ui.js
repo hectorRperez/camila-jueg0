@@ -6,9 +6,21 @@
 const $  = (sel, root = document) => root.querySelector(sel);
 const $$ = (sel, root = document) => [...root.querySelectorAll(sel)];
 
+// tamaño lógico del escenario según el dispositivo
+const LAYOUTS = {
+  mobile:  { w: 704,  h: 1524 },
+  desktop: { w: 1600, h: 900 }
+};
+
 const UI = {
   el: {},
   typing: null,
+  mode: 'mobile',
+
+  // escritorio = ventana apaisada y ancha; si no, móvil vertical
+  pickMode() {
+    return (innerWidth >= 900 && innerWidth > innerHeight * 1.15) ? 'desktop' : 'mobile';
+  },
 
   init() {
     this.el.stage = $('#stage');
@@ -38,8 +50,14 @@ const UI = {
   },
 
   fit() {
-    const s = Math.min(innerWidth / 704, innerHeight / 1524);
+    const mode = this.pickMode();
+    const changed = mode !== this.mode;
+    this.mode = mode;
+    this.el.stage.classList.toggle('desktop', mode === 'desktop');
+    const L = LAYOUTS[mode];
+    const s = Math.min(innerWidth / L.w, innerHeight / L.h);
     this.el.stage.style.transform = `scale(${s})`;
+    if (changed && typeof onLayoutChange === 'function') onLayoutChange(mode);
   },
 
   /* ---------- stats ---------- */

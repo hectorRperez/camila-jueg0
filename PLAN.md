@@ -43,6 +43,38 @@ la marca de agua "PIXEL FAIRY" con `tools/fill.swift`.
 
 "Empezar de nuevo" es el único camino destructivo y pide confirmación.
 
+## Modo escritorio
+
+El juego detecta solo el dispositivo: si la ventana es apaisada y tiene al menos 900 px de
+ancho entra en **modo escritorio**; si no, se queda en el móvil vertical. Al redimensionar
+la ventana cambia en caliente (escenario, fondo y tamaños), sin recargar.
+
+| | Móvil | Escritorio |
+|---|---|---|
+| Escenario lógico | 704 × 1524 (vertical) | 1600 × 900 (16:9) |
+| Fondos | `assets/bg/*.jpg` (verticales) | `assets/bg/desk/*.jpg` (apaisados) |
+| HUD | 268 px de ancho | 350 px, tipografía mayor |
+| Mascota | 436 px de alto | 430 px, centrada sobre la alfombra/cama |
+| Bocadillo | abajo a la izquierda, 418 px | abajo a la izquierda, 500 px |
+| Acciones | fila sobre la barra | menú vertical a la derecha |
+| Navegación | 6 botones de 108 px | 6 botones de 136 px |
+
+El escalado sigue siendo uniforme (`min(ancho, alto)`), así que en pantallas que no son
+16:9 aparecen unas franjas oscuras arriba/abajo, igual que en móvil.
+
+### Fondo de cada pantalla
+
+| Pantalla | Móvil | Escritorio (carpeta `fondos 2`) |
+|---|---|---|
+| Portada | `bg/title.jpg` | `pantallas 2-05` |
+| Casa | `bg/home.jpg` | `pantallas 2-03` |
+| Baño | `bg/bath.jpg` | `pantallas 2_Mesa de trabajo 1` |
+| Cocina | `bg/kitchen.jpg` | `pantallas 2-02` |
+| Dormir | `bg/bedroom.jpg` | `pantallas 2-06` |
+| Juego / Tareas / Bosque | `bg/forest.jpg` | `pantallas 2-04` |
+
+Los originales son 8000 × 4500; se optimizaron a 1600 × 900 JPEG q78 (1,7 MB los seis).
+
 ## Escenas y mapa de acciones
 
 | Escena    | Fondo          | Acción                     | Efecto                                  |

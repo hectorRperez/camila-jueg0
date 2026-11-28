@@ -696,3 +696,98 @@ button{font-family:inherit;cursor:pointer;border:0;background:none;color:inherit
 @media (orientation:landscape) and (max-height:560px){
   #rotate{display:flex}
 }
+
+/* =========================================================
+   MODO ESCRITORIO (escenario 1600 x 900, fondos apaisados)
+   Solo cambia tamaños y posiciones; la mecánica es la misma.
+   ========================================================= */
+#stage.desktop{width:1600px;height:900px}
+
+/* ---------- portada ---------- */
+#stage.desktop .logo{top:52px;width:560px}
+#stage.desktop #btnStart{top:618px;min-width:250px;font-size:32px;padding:22px 52px 16px}
+#stage.desktop #btnNewGame{top:806px;font-size:21px}
+#stage.desktop .intro-box{width:780px;bottom:34px;padding:16px 26px 18px}
+#stage.desktop .intro-box p{font-size:26px}
+#stage.desktop .veil{padding:40px 60px}
+#stage.desktop .name-box{width:560px;padding:32px 30px 38px}
+#stage.desktop .name-title{font-size:34px}
+#stage.desktop #nameInput{font-size:40px}
+#stage.desktop .confirm-box{max-width:600px;padding:34px 30px 30px}
+#stage.desktop .confirm-box p{font-size:31px}
+
+/* ---------- HUD ---------- */
+#stage.desktop #hud{top:26px;left:26px;width:350px;gap:11px}
+#stage.desktop .stat-head{height:36px;font-size:17px;padding:6px 13px 0;letter-spacing:1.8px}
+#stage.desktop .track{height:38px}
+#stage.desktop .knob{height:66px}
+
+/* ---------- monedas ---------- */
+#stage.desktop #coins{top:30px;right:30px;font-size:27px;padding:10px 22px 8px 14px;gap:10px}
+#stage.desktop #coins img{width:46px;height:46px}
+
+/* ---------- mascota ---------- */
+#stage.desktop #petWrap{width:620px}
+
+/* ---------- burbuja ---------- */
+#stage.desktop .bubble{
+  left:26px;bottom:150px;width:500px;
+  font-size:30px;padding:20px 24px 22px;min-height:0;
+}
+#stage.desktop .bubble-arrow{left:62px}
+
+/* ---------- acciones ---------- */
+#stage.desktop #actionBar{
+  left:auto;right:30px;bottom:150px;
+  flex-direction:column;align-items:flex-end;
+  gap:12px;max-width:none;
+}
+#stage.desktop .act{font-size:22px;padding:19px 28px 13px;gap:12px;min-width:270px;justify-content:center}
+#stage.desktop .act img{width:46px;height:46px}
+
+/* ---------- navegación ---------- */
+#stage.desktop #nav{bottom:10px;gap:12px}
+#stage.desktop .nav-btn{width:136px}
+#stage.desktop .nav-btn img{width:104px;height:104px}
+#stage.desktop .nav-btn span{font-size:15px}
+
+/* ---------- tendedero del bosque ---------- */
+#stage.desktop #forestDecor{top:190px;gap:170px}
+#stage.desktop .float-item{width:136px;height:136px}
+
+/* ---------- paneles emergentes ---------- */
+#stage.desktop .overlay{padding:44px 40px}
+#stage.desktop .overlay-panel{max-width:840px;max-height:812px;overflow-y:auto;padding:34px 34px 30px;gap:22px}
+#stage.desktop .op-title{font-size:34px}
+#stage.desktop .op-text{font-size:29px}
+#stage.desktop .big-btn{font-size:34px;padding:24px 64px 16px}
+#stage.desktop .link-btn{font-size:28px}
+
+#stage.desktop .food{width:196px;padding:18px 10px 12px}
+#stage.desktop .food img{width:124px;height:124px}
+#stage.desktop .food span{font-size:16px}
+
+#stage.desktop .task{font-size:29px;padding:15px 20px;gap:14px}
+#stage.desktop .task .box{width:40px;height:40px}
+#stage.desktop .task .box img{width:36px;height:36px}
+
+#stage.desktop .shop-grid{grid-template-columns:repeat(4,1fr);gap:14px}
+#stage.desktop .shop-img{height:120px}
+#stage.desktop .shop-name{font-size:15px;min-height:44px}
+#stage.desktop .shop-tag{font-size:16px}
+#stage.desktop .shop-coins{font-size:26px}
+#stage.desktop .shop-coins img{width:38px;height:38px}
+
+#stage.desktop .star-pad{width:156px;height:156px}
+
+/* minijuego de estrellas en la escena */
+#stage.desktop #miniStart{top:250px;font-size:28px;padding:20px 52px 14px}
+#stage.desktop .star{width:140px;height:140px}
+#stage.desktop .star::before{width:136px;height:136px}
+#stage.desktop .star img{width:calc(var(--s, 44px) * 1.75)}
+#stage.desktop .stars-row{gap:34px;padding:14px 0 8px}
+#stage.desktop .simon-status{font-size:23px;min-height:30px}
+
+#stage.desktop .reward-row img{height:280px}
+
+#stage.desktop .toast{top:300px;font-size:24px;padding:16px 28px 12px}

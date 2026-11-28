@@ -1,0 +1,6 @@
+# No subir al despliegue las herramientas de desarrollo ni la documentación
+tools/
+entrega/
+*.zip
+*.md
+.DS_Store

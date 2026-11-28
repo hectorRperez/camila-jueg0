@@ -1,0 +1,10 @@
+# Sistema
+.DS_Store
+
+# Entrega para el profesor (no va al repositorio)
+entrega/
+*.zip
+
+# Vercel / dependencias
+.vercel
+node_modules/

@@ -6,31 +6,37 @@
 const SCENES = {
   casa: {
     bg: 'assets/bg/home.jpg',
+    bgDesk: 'assets/bg/desk/home.jpg',
     nav: 'house',
     bubble: '¡Hola, {name}! Me alegra verte. ¿Qué hacemos hoy?',
     actions: [{ label: 'Salir al bosque', run: () => enterScene('exterior') }]
   },
   bano: {
     bg: 'assets/bg/bath.jpg',
+    bgDesk: 'assets/bg/desk/bath.jpg',
     nav: 'bath',
     bubble: '¡Estoy limpio y fresquito! ¿Quieres bañarme otra vez?',
     actions: [{ label: 'Bañarme', run: doBath }]
   },
   cocina: {
     bg: 'assets/bg/kitchen.jpg',
+    bgDesk: 'assets/bg/desk/kitchen.jpg',
     nav: 'food',
     bubble: 'Tengo mucha hambre. Elige la comida que te pido para llenar mi barriga.',
     actions: [{ label: 'Comer', run: openFood }]
   },
   dormir: {
     bg: 'assets/bg/bedroom.jpg',
+    bgDesk: 'assets/bg/desk/bedroom.jpg',
     nav: 'sleep',
     pet: { bottom: 476, height: 392 },
+    petDesk: { bottom: 248, height: 340 },
     bubble: 'Mi energía se está agotando. Prestame la cama para descansar.',
     actions: [{ label: 'Dormir', run: doSleep }]
   },
   juego: {
     bg: 'assets/bg/forest.jpg',
+    bgDesk: 'assets/bg/desk/forest.jpg',
     nav: 'play',
     pet: { bottom: 396, height: 500 },
     bubble: 'Deberás recolectar las estrellas en el orden correcto para obtener una recompensa.',
@@ -38,12 +44,14 @@ const SCENES = {
   },
   tarea: {
     bg: 'assets/bg/forest.jpg',
+    bgDesk: 'assets/bg/desk/forest.jpg',
     nav: 'task',
     bubble: 'Estas son mis tareas de hoy. ¡Complétalas todas y gana monedas!',
     actions: [{ label: 'Ver tareas', run: openTasks }]
   },
   exterior: {
     bg: 'assets/bg/forest.jpg',
+    bgDesk: 'assets/bg/desk/forest.jpg',
     nav: 'house',
     bubble: '¡Qué bonito el bosque, {name}! Toca la ropa que flota para vestirme, o explora entre las ramas.',
     actions: [
@@ -163,8 +171,10 @@ function boot() {
     btn.addEventListener('click', () => { UI.beep(600, 0.07, 'square', 0.05); openWardrobe(); });
   });
 
-  ['casa','bano','cocina','dormir','juego','tarea','exterior'].forEach(k => preload(SCENES[k].bg));
-  ['idle','sad','sleep','sleep_pillow','vest','scarf','hat','crown'].forEach(p => preload('assets/pet/' + p + '.png'));
+  paintTitleBg();
+  preload(UI.mode === 'desktop' ? 'assets/bg/desk/title.jpg' : 'assets/bg/title.jpg');
+  ['casa','bano','cocina','dormir','juego','tarea','exterior'].forEach(k => preload(bgFor(k)));
+  ['idle','sad','sleep','vest','scarf','hat','crown'].forEach(p => preload('assets/pet/' + p + '.png'));
   OUTFIT_ORDER.forEach(id => preload(OUTFITS[id].icon));
   FOODS.forEach(f => preload(f.src));
   preload('assets/ui/snowflake.png');
@@ -181,6 +191,23 @@ function boot() {
   if (location.hash === '#test') {
     startGame(nameInput.value || 'Camila', null, true);
   }
+}
+
+function bgFor(sceneId) {
+  const sc = SCENES[sceneId];
+  return (UI.mode === 'desktop' && sc && sc.bgDesk) ? sc.bgDesk : (sc ? sc.bg : '');
+}
+
+function paintTitleBg() {
+  const el = $('.title-bg');
+  if (!el) return;
+  const src = UI.mode === 'desktop' ? 'assets/bg/desk/title.jpg' : 'assets/bg/title.jpg';
+  if (el.getAttribute('src') !== src) el.setAttribute('src', src);
+}
+
+function onLayoutChange() {
+  paintTitleBg();
+  if (typeof S !== 'undefined' && S) UI.setBg(bgFor(currentScene));
 }
 
 function preload(src) {
@@ -246,7 +273,7 @@ function enterScene(id) {
   }
 
   resetStarGame();
-  UI.setBg(sc.bg);
+  UI.setBg(bgFor(id));
   UI.el.bubble.classList.remove('show');
   const dirtLayer = $('#dirtLayer');
   if (dirtLayer) dirtLayer.innerHTML = '';
@@ -260,9 +287,10 @@ function enterScene(id) {
   });
 
   // mascota
-  const pp = sc.pet || {};
-  UI.el.petWrap.style.setProperty('--pet-bottom', (pp.bottom || 368) + 'px');
-  UI.el.petWrap.style.setProperty('--pet-height', (pp.height || 436) + 'px');
+  const desk = UI.mode === 'desktop';
+  const pp = (desk ? sc.petDesk : sc.pet) || {};
+  UI.el.petWrap.style.setProperty('--pet-bottom', (pp.bottom || (desk ? 132 : 368)) + 'px');
+  UI.el.petWrap.style.setProperty('--pet-height', (pp.height || (desk ? 430 : 436)) + 'px');
   sleeping = false;
   updateMood();
   stopDim();
